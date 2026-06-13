@@ -5,41 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Clasificación de clientes</title>
     <style>
-      body { font-family: Arial, sans-serif; max-width: 680px; margin: 40px auto; padding: 0 16px; }
-      label { display:block; margin-top:8px; }
-      input { padding:6px; width:200px; }
-      .result { margin-top:16px; padding:10px; border:1px solid #ddd; background:#f9f9f9 }
-      .error { color: #a00 }
+      * { box-sizing: border-box; }
+
+      body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #6a8dff 0%, #8f6aff 100%);
+        padding: 24px;
+      }
+
+      .card {
+        background: #fff;
+        width: 100%;
+        max-width: 420px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 32px;
+      }
+
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.6rem;
+        color: #2d2d3a;
+        text-align: center;
+      }
+
+      .subtitle {
+        margin: 0 0 24px;
+        color: #6b7280;
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      label {
+        display: block;
+        margin-top: 16px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #374151;
+      }
+
+      input {
+        width: 100%;
+        margin-top: 6px;
+        padding: 10px 12px;
+        font-size: 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #6a8dff;
+        box-shadow: 0 0 0 3px rgba(106, 141, 255, 0.2);
+      }
+
+      button {
+        width: 100%;
+        margin-top: 24px;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #6a8dff 0%, #8f6aff 100%);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      .error {
+        margin-top: 16px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-size: 0.9rem;
+      }
+
+      .result {
+        margin-top: 24px;
+        padding: 16px;
+        border-radius: 10px;
+        background: #f0f4ff;
+        border: 1px solid #dbe4ff;
+      }
+
+      .result p {
+        margin: 4px 0;
+        color: #374151;
+      }
+
+      .result .group {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: #6a8dff;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
     </style>
   </head>
   <body>
-    <h1>Clasificación de clientes</h1>
-    <p>Introduce los datos de ingresos y gastos para ver el grupo asignado.</p>
+    <div class="card">
+      <h1>Clasificación de clientes</h1>
+      <p class="subtitle">Introduce los datos de ingresos y gastos para ver el grupo asignado.</p>
 
-    {% if error %}
-      <p class="error">{{ error }}</p>
-    {% endif %}
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
 
-    <form method="post" action="/predict">
-      <label>Ingresos:
-        <input name="ingresos" type="text" value="{{ ingresos or '' }}" placeholder="ej. 3500" />
-      </label>
-      <label>Gastos:
-        <input name="gastos" type="text" value="{{ gastos or '' }}" placeholder="ej. 1200" />
-      </label>
-      <div style="margin-top:10px">
+      <form method="post" action="/predict">
+        <label for="ingresos">Ingresos</label>
+        <input id="ingresos" name="ingresos" type="text" inputmode="decimal" value="{{ ingresos or '' }}" placeholder="ej. 3500" />
+
+        <label for="gastos">Gastos</label>
+        <input id="gastos" name="gastos" type="text" inputmode="decimal" value="{{ gastos or '' }}" placeholder="ej. 1200" />
+
         <button type="submit">Clasificar</button>
-      </div>
-    </form>
+      </form>
 
-    {% if group %}
-      <div class="result">
-        <strong>Resultado:</strong>
-        <p>Ingresos: {{ ingresos }} — Gastos: {{ gastos }}</p>
-        <p><strong>Grupo asignado:</strong> {{ group }}</p>
-      </div>
-    {% endif %}
-
-    
+      {% if group %}
+        <div class="result">
+          <p>Ingresos: <strong>{{ ingresos }}</strong> — Gastos: <strong>{{ gastos }}</strong></p>
+          <p>Grupo asignado:</p>
+          <span class="group">{{ group }}</span>
+        </div>
+      {% endif %}
+    </div>
   </body>
 </html>
